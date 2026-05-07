@@ -254,6 +254,11 @@ namespace Amplitude.Helpers
                     else
                     {
                         var clip = SoundClipManager.GetClip(item);
+                        if (clip?.IsQuickCaptureEnabled == true)
+                        {
+                            continue;
+                        }
+
                         clip?.PlayAudio();
                     }
                 }
