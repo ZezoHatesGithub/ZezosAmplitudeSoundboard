@@ -15,6 +15,12 @@ namespace Amplitude.Helpers
         private WaveFileWriter? writer;
         private string? activePath;
 
+        private void EnsureWriter(string capturePath, WaveFormat waveFormat)
+        {
+            writer?.Dispose();
+            writer = new WaveFileWriter(capturePath, waveFormat);
+        }
+
         public bool IsRecording => writer != null;
 
         public Task<string?> StartRecordingAsync(SoundClip clip)
@@ -22,17 +28,18 @@ namespace Amplitude.Helpers
 #if Windows
             Directory.CreateDirectory(Path.Combine(App.APP_STORAGE, "QuickCaptures"));
             activePath = Path.Combine(App.APP_STORAGE, "QuickCaptures", $"{clip.Id}.wav");
-            writer = new WaveFileWriter(activePath, new WaveFormat(48000, 16, 2));
 
             if (clip.QuickCaptureRecordingSource == "Microphone")
             {
-                micIn = new WaveInEvent { WaveFormat = writer.WaveFormat };
+                micIn = new WaveInEvent { WaveFormat = new WaveFormat(48000, 16, 2) };
+                EnsureWriter(activePath, micIn.WaveFormat);
                 micIn.DataAvailable += (_, e) => writer?.Write(e.Buffer, 0, e.BytesRecorded);
                 micIn.StartRecording();
             }
             else if (clip.QuickCaptureRecordingSource == "Desktop")
             {
                 loopback = new WasapiLoopbackCapture();
+                EnsureWriter(activePath, loopback.WaveFormat);
                 loopback.DataAvailable += (_, e) => writer?.Write(e.Buffer, 0, e.BytesRecorded);
                 loopback.StartRecording();
             }
