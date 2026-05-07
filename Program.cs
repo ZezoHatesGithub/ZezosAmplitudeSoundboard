@@ -51,6 +51,8 @@ namespace AmplitudeSoundboard
             services.AddSingleton<IKeyboardHook, SharpKeyboardHook>();
             services.AddSingleton<ISoundEngine, MSoundEngine>();
             services.AddSingleton<ThemeManager>();
+            services.AddSingleton<QuickCaptureRecordingService>();
+            services.AddSingleton<QuickCaptureManager>();
             services.AddSingleton<OutputProfileManager>();
             services.AddSingleton<HotkeysManager>();
             services.AddSingleton<ConfigManager>();

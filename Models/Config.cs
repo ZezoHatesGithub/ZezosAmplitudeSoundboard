@@ -139,6 +139,20 @@ namespace Amplitude.Models
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public int DesiredImageWidth => AutoScaleTilesToWindow ? ActualTileWidth : GridTileWidth ?? 1;
 
+
+        private int _quickCaptureHoldThresholdMs = 200;
+        public int QuickCaptureHoldThresholdMs
+        {
+            get => _quickCaptureHoldThresholdMs;
+            set
+            {
+                if (value != _quickCaptureHoldThresholdMs)
+                {
+                    _quickCaptureHoldThresholdMs = value < 10 ? 10 : value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         private bool _checkForUpdates = true;
         public bool CheckForUpdates
         {

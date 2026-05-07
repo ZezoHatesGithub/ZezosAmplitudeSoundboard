@@ -180,6 +180,49 @@ namespace Amplitude.Models
             }
         }
 
+
+        private bool _isQuickCaptureEnabled = false;
+        public bool IsQuickCaptureEnabled
+        {
+            get => _isQuickCaptureEnabled;
+            set
+            {
+                if (value != _isQuickCaptureEnabled)
+                {
+                    _isQuickCaptureEnabled = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _quickCaptureRecordingSource = "Disabled";
+        public string QuickCaptureRecordingSource
+        {
+            get => _quickCaptureRecordingSource;
+            set
+            {
+                if (value != _quickCaptureRecordingSource)
+                {
+                    _quickCaptureRecordingSource = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private string _savedCapturePath = "";
+        public string SavedCapturePath
+        {
+            get => _savedCapturePath;
+            set
+            {
+                if (value != _savedCapturePath)
+                {
+                    _savedCapturePath = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private string _id = null;
         // Do not write to JSON, since it is stored in dictionary anyway
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]

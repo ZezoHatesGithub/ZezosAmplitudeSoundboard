@@ -34,6 +34,7 @@ namespace Amplitude.Helpers
 {
     public class SharpKeyboardHook : IKeyboardHook
     {
+        public event Action<string, bool>? HotkeyStateChanged;
         private readonly Lazy<HotkeysManager> _hotkeysManager;
         private readonly Lazy<SoundClipManager> _soundClipManager;
         private readonly Lazy<WindowManager> _windowManager;
@@ -187,6 +188,12 @@ namespace Amplitude.Helpers
 
         private void HandleKeyReleased(object? sender, KeyboardHookEventArgs e)
         {
+            var keyCode = e.Data.KeyCode;
+            if (!IgnoreKey(keyCode) && !IsKeySpecial(keyCode))
+            {
+                HotkeyStateChanged?.Invoke(FullKey(GetFriendlyKeyName(keyCode)), false);
+            }
+
             lock (keySetLock)
             {
                 keySet.Remove(e.Data.KeyCode);
@@ -211,7 +218,9 @@ namespace Amplitude.Helpers
             }
             else
             {
-                ProcessHotkey(GetFriendlyKeyName(keyCode));
+                var key = GetFriendlyKeyName(keyCode);
+                HotkeyStateChanged?.Invoke(FullKey(key), true);
+                ProcessHotkey(key);
             }
 
         }
@@ -245,6 +254,11 @@ namespace Amplitude.Helpers
                     else
                     {
                         var clip = SoundClipManager.GetClip(item);
+                        if (clip?.IsQuickCaptureEnabled == true)
+                        {
+                            continue;
+                        }
+
                         clip?.PlayAudio();
                     }
                 }

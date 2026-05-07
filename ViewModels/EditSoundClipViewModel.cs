@@ -40,6 +40,8 @@ namespace Amplitude.ViewModels
         public List<OutputProfile> OutputProfilesList => OutputProfileManager.OutputProfilesList;
 
         public OutputProfile? CurrentOutputProfile => OutputProfileManager.GetOutputProfile(Model.OutputProfileId);
+        public List<string> QuickCaptureRecordingSources { get; } = ["Disabled", "Microphone", "Desktop"];
+
 
         private bool _hasNameField;
         public bool HasNameField
