@@ -34,17 +34,33 @@ namespace Amplitude.Helpers
     {
         private readonly IKeyboardHook _keyboardHook;
         private readonly Lazy<SoundClipManager> _soundClipManager;
+        private readonly Lazy<QuickCaptureManager> _quickCaptureManager;
 
         private IKeyboardHook KeyboardHook => _keyboardHook;
         private SoundClipManager SoundClipManager => _soundClipManager.Value;
+        private QuickCaptureManager QuickCaptureManager => _quickCaptureManager.Value;
 
         public const string UNBIND_HOTKEY = "UNBIND_HOTKEY";
         public const string MASTER_STOP_SOUND_HOTKEY = "MASTER_STOP_SOUND_HOTKEY";
 
-        public HotkeysManager(IKeyboardHook keyboardHook, Lazy<SoundClipManager> soundClipManager)
+        public HotkeysManager(IKeyboardHook keyboardHook, Lazy<SoundClipManager> soundClipManager, Lazy<QuickCaptureManager> quickCaptureManager)
         {
             _keyboardHook = keyboardHook;
             _soundClipManager = soundClipManager;
+            _quickCaptureManager = quickCaptureManager;
+            KeyboardHook.HotkeyStateChanged += KeyboardHook_HotkeyStateChanged;
+        }
+
+        private async void KeyboardHook_HotkeyStateChanged(string hotkey, bool isDown)
+        {
+            if (isDown)
+            {
+                await QuickCaptureManager.HandleKeyDown(hotkey);
+            }
+            else
+            {
+                await QuickCaptureManager.HandleKeyUp(hotkey);
+            }
         }
 
         public Dictionary<string, List<string>> Hotkeys = [];
