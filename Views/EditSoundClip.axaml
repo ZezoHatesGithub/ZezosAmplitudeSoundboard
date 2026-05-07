@@ -196,6 +196,12 @@
                     </Panel>
                   </Button>
                 </Grid>
+                <StackPanel Margin="5,4,5,0">
+                  <CheckBox Content="Enable quick-capture" IsChecked="{Binding Model.IsQuickCaptureEnabled}"/>
+                  <ComboBox IsEnabled="{Binding Model.IsQuickCaptureEnabled}" SelectedItem="{Binding Model.QuickCaptureRecordingSource}" ItemsSource="{Binding QuickCaptureRecordingSources}"/>
+                  <TextBlock IsVisible="{Binding Model.IsQuickCaptureEnabled}" Text="Saved quick-capture path:"/>
+                  <TextBlock IsVisible="{Binding Model.IsQuickCaptureEnabled}" Text="{Binding Model.SavedCapturePath}" TextWrapping="Wrap"/>
+                </StackPanel>
               </StackPanel>
             </Grid>
           </Border>
